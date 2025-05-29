@@ -1,4 +1,3 @@
-
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -258,11 +257,7 @@ const Fornecedores = () => {
                     )}
                   </div>
                   <div className="flex gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => handleEdit(fornecedor)}
-                    >
+                    <Button variant="outline" size="sm">
                       <Edit className="w-4 h-4" />
                     </Button>
                     <Button 

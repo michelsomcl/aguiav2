@@ -1,3 +1,4 @@
+
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -45,7 +46,7 @@ const PecaForm = ({ onSuccess }: { onSuccess?: () => void }) => {
           id="nome" 
           placeholder="Nome da peça" 
           value={pecaData.nome}
-          onChange={(e) => setPecaData(prev => ({ ...prev, nome: e.target.value }))} 
+          onChange={(e) => setPecaData(prev => ({ ...prev, nome: e.target.value }))}
           required
         />
       </div>
@@ -59,7 +60,7 @@ const PecaForm = ({ onSuccess }: { onSuccess?: () => void }) => {
             step="0.01"
             placeholder="0,00" 
             value={pecaData.valor_unitario || ""}
-            onChange={(e) => setPecaData(prev => ({ ...prev, valor_unitario: parseFloat(e.target.value) || 0 }))} 
+            onChange={(e) => setPecaData(prev => ({ ...prev, valor_unitario: parseFloat(e.target.value) || 0 }))}
             required
           />
         </div>
@@ -70,7 +71,7 @@ const PecaForm = ({ onSuccess }: { onSuccess?: () => void }) => {
             type="number"
             placeholder="0" 
             value={pecaData.estoque || ""}
-            onChange={(e) => setPecaData(prev => ({ ...prev, estoque: parseInt(e.target.value) || 0 }))} 
+            onChange={(e) => setPecaData(prev => ({ ...prev, estoque: parseInt(e.target.value) || 0 }))}
           />
         </div>
       </div>
@@ -92,7 +93,6 @@ const PecaForm = ({ onSuccess }: { onSuccess?: () => void }) => {
 const Pecas = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [editingPeca, setEditingPeca] = useState<any>(null)
 
   const { data: pecas = [], isLoading } = usePecas()
   const deletePeca = useDeletePeca()
@@ -109,10 +109,6 @@ const Pecas = () => {
 
   const handleFormSuccess = () => {
     setIsDialogOpen(false)
-  }
-
-  const handleEdit = (peca: any) => {
-    setEditingPeca(peca)
   }
 
   if (isLoading) {
@@ -217,14 +213,6 @@ const Pecas = () => {
           ))
         )}
       </div>
-
-      {editingPeca && (
-        <EditPecaDialog
-          peca={editingPeca}
-          open={!!editingPeca}
-          onOpenChange={(open) => !open && setEditingPeca(null)}
-        />
-      )}
     </div>
   )
 }
