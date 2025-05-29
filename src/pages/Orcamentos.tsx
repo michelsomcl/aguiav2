@@ -1,4 +1,3 @@
-
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -23,6 +22,7 @@ import {
 const Orcamentos = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
+  const [editingOrcamento, setEditingOrcamento] = useState<any>(null)
 
   // Dados mock para demonstração
   const orcamentos = [
@@ -105,6 +105,12 @@ const Orcamentos = () => {
     
     return matchesSearch && matchesStatus
   })
+
+  const handleEdit = (orcamento: any) => {
+    setEditingOrcamento(orcamento)
+    // TODO: Implementar diálogo de edição de orçamento
+    console.log("Editando orçamento:", orcamento)
+  }
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -191,7 +197,11 @@ const Orcamentos = () => {
                     <Button variant="outline" size="sm">
                       <Eye className="w-4 h-4" />
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleEdit(orcamento)}
+                    >
                       <Edit className="w-4 h-4" />
                     </Button>
                     {orcamento.status === "Aprovado" && (

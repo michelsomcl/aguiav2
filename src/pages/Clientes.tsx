@@ -1,4 +1,3 @@
-
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -20,11 +19,13 @@ import {
 } from "lucide-react"
 import { useClientes, useDeleteCliente } from "@/hooks/useClientes"
 import { ClientForm } from "@/components/ClientForm"
+import { EditClienteDialog } from "@/components/EditClienteDialog"
 
 const Clientes = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [clientType, setClientType] = useState("all")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [editingCliente, setEditingCliente] = useState<any>(null)
 
   const { data: clientes = [], isLoading } = useClientes()
   const deleteCliente = useDeleteCliente()
@@ -43,6 +44,10 @@ const Clientes = () => {
     if (confirm("Tem certeza que deseja excluir este cliente?")) {
       deleteCliente.mutate(id)
     }
+  }
+
+  const handleEdit = (cliente: any) => {
+    setEditingCliente(cliente)
   }
 
   if (isLoading) {
@@ -186,6 +191,14 @@ const Clientes = () => {
         <div className="text-center py-12">
           <p className="text-muted-foreground">Nenhum cliente encontrado.</p>
         </div>
+      )}
+
+      {editingCliente && (
+        <EditClienteDialog
+          cliente={editingCliente}
+          open={!!editingCliente}
+          onOpenChange={(open) => !open && setEditingCliente(null)}
+        />
       )}
     </div>
   )

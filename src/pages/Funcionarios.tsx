@@ -1,4 +1,3 @@
-
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -20,11 +19,13 @@ import {
 } from "lucide-react"
 import { useFuncionarios, useDeleteFuncionario } from "@/hooks/useFuncionarios"
 import { FuncionarioForm } from "@/components/FuncionarioForm"
+import { EditFuncionarioDialog } from "@/components/EditFuncionarioDialog"
 
 const Funcionarios = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [categoryFilter, setCategoryFilter] = useState("all")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [editingFuncionario, setEditingFuncionario] = useState<any>(null)
 
   const { data: funcionarios = [], isLoading } = useFuncionarios()
   const deleteFuncionario = useDeleteFuncionario()
@@ -72,6 +73,10 @@ const Funcionarios = () => {
 
   const handleFormSuccess = () => {
     setIsDialogOpen(false)
+  }
+
+  const handleEdit = (funcionario: any) => {
+    setEditingFuncionario(funcionario)
   }
 
   if (isLoading) {
@@ -203,6 +208,14 @@ const Funcionarios = () => {
           ))
         )}
       </div>
+
+      {editingFuncionario && (
+        <EditFuncionarioDialog
+          funcionario={editingFuncionario}
+          open={!!editingFuncionario}
+          onOpenChange={(open) => !open && setEditingFuncionario(null)}
+        />
+      )}
     </div>
   )
 }

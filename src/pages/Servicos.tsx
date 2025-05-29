@@ -1,4 +1,3 @@
-
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -44,7 +43,7 @@ const ServicoForm = ({ onSuccess }: { onSuccess?: () => void }) => {
           id="nome" 
           placeholder="Nome do serviço" 
           value={servicoData.nome}
-          onChange={(e) => setServicoData(prev => ({ ...prev, nome: e.target.value }))}
+          onChange={(e) => setServicoData(prev => ({ ...prev, nome: e.target.value }))} 
           required
         />
       </div>
@@ -57,7 +56,7 @@ const ServicoForm = ({ onSuccess }: { onSuccess?: () => void }) => {
           step="0.01"
           placeholder="0,00" 
           value={servicoData.valor_hora || ""}
-          onChange={(e) => setServicoData(prev => ({ ...prev, valor_hora: parseFloat(e.target.value) || 0 }))}
+          onChange={(e) => setServicoData(prev => ({ ...prev, valor_hora: parseFloat(e.target.value) || 0 }))} 
           required
         />
       </div>
@@ -79,6 +78,7 @@ const ServicoForm = ({ onSuccess }: { onSuccess?: () => void }) => {
 const Servicos = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [editingServico, setEditingServico] = useState<any>(null)
 
   const { data: servicos = [], isLoading } = useServicos()
   const deleteServico = useDeleteServico()
@@ -95,6 +95,10 @@ const Servicos = () => {
 
   const handleFormSuccess = () => {
     setIsDialogOpen(false)
+  }
+
+  const handleEdit = (servico: any) => {
+    setEditingServico(servico)
   }
 
   if (isLoading) {
@@ -183,7 +187,11 @@ const Servicos = () => {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleEdit(servico)}
+                    >
                       <Edit className="w-4 h-4" />
                     </Button>
                     <Button 
@@ -201,6 +209,14 @@ const Servicos = () => {
           ))
         )}
       </div>
+
+      {editingServico && (
+        <EditServicoDialog
+          servico={editingServico}
+          open={!!editingServico}
+          onOpenChange={(open) => !open && setEditingServico(null)}
+        />
+      )}
     </div>
   )
 }
