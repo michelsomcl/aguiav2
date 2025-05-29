@@ -1,4 +1,3 @@
-
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -9,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Building2, Plus, Search, Edit, Trash2, Phone, MapPin, Mail } from "lucide-react"
 import { useFornecedores, useCreateFornecedor, useDeleteFornecedor } from "@/hooks/useFornecedores"
 import { TablesInsert } from "@/integrations/supabase/types"
+import { EditFornecedorDialog } from "@/components/EditFornecedorDialog"
 
 const FornecedorForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   const [fornecedorData, setFornecedorData] = useState<TablesInsert<"fornecedores">>({
@@ -42,6 +42,17 @@ const FornecedorForm = ({ onSuccess }: { onSuccess?: () => void }) => {
     })
   }
 
+  const handleCancel = () => {
+    setFornecedorData({
+      nome: "",
+      cnpj: "",
+      telefone: "",
+      email: "",
+      endereco: "",
+    })
+    onSuccess?.()
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-2 gap-4">
@@ -51,7 +62,7 @@ const FornecedorForm = ({ onSuccess }: { onSuccess?: () => void }) => {
             id="nome" 
             placeholder="Nome do fornecedor" 
             value={fornecedorData.nome}
-            onChange={(e) => setFornecedorData(prev => ({ ...prev, nome: e.target.value }))}
+            onChange={(e) => setFornecedorData(prev => ({ ...prev, nome: e.target.value }))} 
             required
           />
         </div>
@@ -61,7 +72,7 @@ const FornecedorForm = ({ onSuccess }: { onSuccess?: () => void }) => {
             id="cnpj" 
             placeholder="00.000.000/0000-00" 
             value={fornecedorData.cnpj}
-            onChange={(e) => setFornecedorData(prev => ({ ...prev, cnpj: e.target.value }))}
+            onChange={(e) => setFornecedorData(prev => ({ ...prev, cnpj: e.target.value }))} 
             required
           />
         </div>
@@ -74,7 +85,7 @@ const FornecedorForm = ({ onSuccess }: { onSuccess?: () => void }) => {
             id="telefone" 
             placeholder="(11) 99999-9999" 
             value={fornecedorData.telefone}
-            onChange={(e) => setFornecedorData(prev => ({ ...prev, telefone: e.target.value }))}
+            onChange={(e) => setFornecedorData(prev => ({ ...prev, telefone: e.target.value }))} 
           />
         </div>
         <div>
@@ -84,7 +95,7 @@ const FornecedorForm = ({ onSuccess }: { onSuccess?: () => void }) => {
             type="email"
             placeholder="contato@fornecedor.com" 
             value={fornecedorData.email}
-            onChange={(e) => setFornecedorData(prev => ({ ...prev, email: e.target.value }))}
+            onChange={(e) => setFornecedorData(prev => ({ ...prev, email: e.target.value }))} 
           />
         </div>
       </div>
@@ -95,12 +106,14 @@ const FornecedorForm = ({ onSuccess }: { onSuccess?: () => void }) => {
           id="endereco" 
           placeholder="Endereço completo" 
           value={fornecedorData.endereco}
-          onChange={(e) => setFornecedorData(prev => ({ ...prev, endereco: e.target.value }))}
+          onChange={(e) => setFornecedorData(prev => ({ ...prev, endereco: e.target.value }))} 
         />
       </div>
       
       <div className="flex justify-end gap-2">
-        <Button type="button" variant="outline">Cancelar</Button>
+        <Button type="button" variant="outline" onClick={handleCancel}>
+          Cancelar
+        </Button>
         <Button 
           type="submit" 
           className="bg-primary hover:bg-primary/90"
@@ -116,6 +129,7 @@ const FornecedorForm = ({ onSuccess }: { onSuccess?: () => void }) => {
 const Fornecedores = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [editingFornecedor, setEditingFornecedor] = useState<any>(null)
 
   const { data: fornecedores = [], isLoading } = useFornecedores()
   const deleteFornecedor = useDeleteFornecedor()
@@ -133,6 +147,10 @@ const Fornecedores = () => {
 
   const handleFormSuccess = () => {
     setIsDialogOpen(false)
+  }
+
+  const handleEdit = (fornecedor: any) => {
+    setEditingFornecedor(fornecedor)
   }
 
   if (isLoading) {
@@ -257,6 +275,14 @@ const Fornecedores = () => {
           ))
         )}
       </div>
+
+      {editingFornecedor && (
+        <EditFornecedorDialog
+          fornecedor={editingFornecedor}
+          open={!!editingFornecedor}
+          onOpenChange={(open) => !open && setEditingFornecedor(null)}
+        />
+      )}
     </div>
   )
 }
